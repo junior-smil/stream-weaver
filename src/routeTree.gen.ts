@@ -10,33 +10,80 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccesEtConfidentialiteRouteImport } from './routes/acces-et-confidentialite'
+import { Route as FilmsRouteImport } from './routes/films'
+import { Route as RechercheRouteImport } from './routes/recherche'
+import { Route as SeriesRouteImport } from './routes/series'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccesEtConfidentialiteRoute = AccesEtConfidentialiteRouteImport.update({
+  id: '/acces-et-confidentialite',
+  path: '/acces-et-confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FilmsRoute = FilmsRouteImport.update({
+  id: '/films',
+  path: '/films',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RechercheRoute = RechercheRouteImport.update({
+  id: '/recherche',
+  path: '/recherche',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeriesRoute = SeriesRouteImport.update({
+  id: '/series',
+  path: '/series',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acces-et-confidentialite': typeof AccesEtConfidentialiteRoute
+  '/films': typeof FilmsRoute
+  '/recherche': typeof RechercheRoute
+  '/series': typeof SeriesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acces-et-confidentialite': typeof AccesEtConfidentialiteRoute
+  '/films': typeof FilmsRoute
+  '/recherche': typeof RechercheRoute
+  '/series': typeof SeriesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/acces-et-confidentialite': typeof AccesEtConfidentialiteRoute
+  '/films': typeof FilmsRoute
+  '/recherche': typeof RechercheRoute
+  '/series': typeof SeriesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/acces-et-confidentialite' | '/films' | '/recherche' | '/series'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/acces-et-confidentialite' | '/films' | '/recherche' | '/series'
+  id:
+    | '__root__'
+    | '/'
+    | '/acces-et-confidentialite'
+    | '/films'
+    | '/recherche'
+    | '/series'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccesEtConfidentialiteRoute: typeof AccesEtConfidentialiteRoute
+  FilmsRoute: typeof FilmsRoute
+  RechercheRoute: typeof RechercheRoute
+  SeriesRoute: typeof SeriesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +95,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/acces-et-confidentialite': {
+      id: '/acces-et-confidentialite'
+      path: '/acces-et-confidentialite'
+      fullPath: '/acces-et-confidentialite'
+      preLoaderRoute: typeof AccesEtConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/films': {
+      id: '/films'
+      path: '/films'
+      fullPath: '/films'
+      preLoaderRoute: typeof FilmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recherche': {
+      id: '/recherche'
+      path: '/recherche'
+      fullPath: '/recherche'
+      preLoaderRoute: typeof RechercheRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/series': {
+      id: '/series'
+      path: '/series'
+      fullPath: '/series'
+      preLoaderRoute: typeof SeriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccesEtConfidentialiteRoute: AccesEtConfidentialiteRoute,
+  FilmsRoute: FilmsRoute,
+  RechercheRoute: RechercheRoute,
+  SeriesRoute: SeriesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

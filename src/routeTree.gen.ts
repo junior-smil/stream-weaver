@@ -10,19 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AccesEtConfidentialiteRouteImport } from './routes/acces-et-confidentialite'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FilmsRouteImport } from './routes/films'
 import { Route as RechercheRouteImport } from './routes/recherche'
 import { Route as SeriesRouteImport } from './routes/series'
+import { Route as AuthenticatedMonCompteRouteImport } from './routes/_authenticated/mon-compte'
+import { Route as RegarderSlugRouteImport } from './routes/regarder.$slug'
+import { Route as TitreSlugRouteImport } from './routes/titre.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccesEtConfidentialiteRoute = AccesEtConfidentialiteRouteImport.update({
   id: '/acces-et-confidentialite',
   path: '/acces-et-confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FilmsRoute = FilmsRouteImport.update({
@@ -40,50 +54,104 @@ const SeriesRoute = SeriesRouteImport.update({
   path: '/series',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMonCompteRoute = AuthenticatedMonCompteRouteImport.update({
+  id: '/mon-compte',
+  path: '/mon-compte',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const RegarderSlugRoute = RegarderSlugRouteImport.update({
+  id: '/regarder/$slug',
+  path: '/regarder/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TitreSlugRoute = TitreSlugRouteImport.update({
+  id: '/titre/$slug',
+  path: '/titre/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acces-et-confidentialite': typeof AccesEtConfidentialiteRoute
+  '/auth': typeof AuthRoute
   '/films': typeof FilmsRoute
   '/recherche': typeof RechercheRoute
   '/series': typeof SeriesRoute
+  '/mon-compte': typeof AuthenticatedMonCompteRoute
+  '/regarder/$slug': typeof RegarderSlugRoute
+  '/titre/$slug': typeof TitreSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acces-et-confidentialite': typeof AccesEtConfidentialiteRoute
+  '/auth': typeof AuthRoute
   '/films': typeof FilmsRoute
   '/recherche': typeof RechercheRoute
   '/series': typeof SeriesRoute
+  '/mon-compte': typeof AuthenticatedMonCompteRoute
+  '/regarder/$slug': typeof RegarderSlugRoute
+  '/titre/$slug': typeof TitreSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/acces-et-confidentialite': typeof AccesEtConfidentialiteRoute
+  '/auth': typeof AuthRoute
   '/films': typeof FilmsRoute
   '/recherche': typeof RechercheRoute
   '/series': typeof SeriesRoute
+  '/_authenticated/mon-compte': typeof AuthenticatedMonCompteRoute
+  '/regarder/$slug': typeof RegarderSlugRoute
+  '/titre/$slug': typeof TitreSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/acces-et-confidentialite' | '/films' | '/recherche' | '/series'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/acces-et-confidentialite' | '/films' | '/recherche' | '/series'
-  id:
-    | '__root__'
     | '/'
     | '/acces-et-confidentialite'
+    | '/auth'
     | '/films'
     | '/recherche'
     | '/series'
+    | '/mon-compte'
+    | '/regarder/$slug'
+    | '/titre/$slug'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/acces-et-confidentialite'
+    | '/auth'
+    | '/films'
+    | '/recherche'
+    | '/series'
+    | '/mon-compte'
+    | '/regarder/$slug'
+    | '/titre/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/acces-et-confidentialite'
+    | '/auth'
+    | '/films'
+    | '/recherche'
+    | '/series'
+    | '/_authenticated/mon-compte'
+    | '/regarder/$slug'
+    | '/titre/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AccesEtConfidentialiteRoute: typeof AccesEtConfidentialiteRoute
+  AuthRoute: typeof AuthRoute
   FilmsRoute: typeof FilmsRoute
   RechercheRoute: typeof RechercheRoute
   SeriesRoute: typeof SeriesRoute
+  RegarderSlugRoute: typeof RegarderSlugRoute
+  TitreSlugRoute: typeof TitreSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -95,11 +163,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/acces-et-confidentialite': {
       id: '/acces-et-confidentialite'
       path: '/acces-et-confidentialite'
       fullPath: '/acces-et-confidentialite'
       preLoaderRoute: typeof AccesEtConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/films': {
@@ -123,15 +205,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SeriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/mon-compte': {
+      id: '/_authenticated/mon-compte'
+      path: '/mon-compte'
+      fullPath: '/mon-compte'
+      preLoaderRoute: typeof AuthenticatedMonCompteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/regarder/$slug': {
+      id: '/regarder/$slug'
+      path: '/regarder/$slug'
+      fullPath: '/regarder/$slug'
+      preLoaderRoute: typeof RegarderSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/titre/$slug': {
+      id: '/titre/$slug'
+      path: '/titre/$slug'
+      fullPath: '/titre/$slug'
+      preLoaderRoute: typeof TitreSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedMonCompteRoute: typeof AuthenticatedMonCompteRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedMonCompteRoute: AuthenticatedMonCompteRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AccesEtConfidentialiteRoute: AccesEtConfidentialiteRoute,
+  AuthRoute: AuthRoute,
   FilmsRoute: FilmsRoute,
   RechercheRoute: RechercheRoute,
   SeriesRoute: SeriesRoute,
+  RegarderSlugRoute: RegarderSlugRoute,
+  TitreSlugRoute: TitreSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

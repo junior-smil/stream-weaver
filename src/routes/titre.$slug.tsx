@@ -53,7 +53,7 @@ export const Route = createFileRoute("/titre/$slug")({
       </p>
     </div>
   ),
-  component: TitleDetail;
+  component: TitleDetail,
 });
 
 function TitleDetail() {

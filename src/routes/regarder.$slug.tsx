@@ -98,19 +98,23 @@ function WatchPage() {
 
   async function saveProgress(position: number, duration: number) {
     if (!user) return;
-    if (position - lastSaved.current < 10) return;
+    if (Math.abs(position - lastSaved.current) < 10) return;
     lastSaved.current = position;
-    await supabase.from("watch_history").upsert(
-      {
-        user_id: user.id,
-        title_id: title.id,
-        episode_id: ep ?? null,
-        position_seconds: position,
-        duration_seconds: duration,
-        completed: duration > 0 && position / duration > 0.95,
-      },
-      { onConflict: ep ? "user_id,episode_id" : "user_id,title_id" },
-    );
+    const payload = {
+      position_seconds: Math.floor(position),
+      duration_seconds: Math.floor(duration) || null,
+      completed: duration > 0 && position / duration > 0.95,
+    };
+    let existing = supabase.from("watch_history").select("id").eq("title_id", title.id);
+    existing = ep ? existing.eq("episode_id", ep) : existing.is("episode_id", null);
+    const { data: row } = await existing.maybeSingle();
+    if (row) {
+      await supabase.from("watch_history").update(payload).eq("id", row.id);
+    } else {
+      await supabase
+        .from("watch_history")
+        .insert({ user_id: user.id, title_id: title.id, episode_id: ep ?? null, ...payload });
+    }
   }
 
   const active = sources[activeIndex];

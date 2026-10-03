@@ -85,9 +85,9 @@ function AdminTitle() {
   if (!data?.title) return <p className="px-4 py-24 text-center text-muted-foreground">Titre introuvable.</p>;
   const t = data.title;
 
-  async function patchTitle(values: Record<string, unknown>, msg = "Fiche enregistrée") {
+  async function patchTitle(values: Partial<{ title: string; overview: string | null; poster_url: string | null; backdrop_url: string | null; genres: string[]; is_published: boolean; is_featured: boolean; is_trending: boolean }>, msg = "Fiche enregistrée") {
     const { error } = await supabase.from("titles").update(values).eq("id", id);
-    if (error) return toast.error("Mise à jour impossible.");
+    if (error) return void toast.error("Mise à jour impossible.");
     toast.success(msg);
     refresh();
     qc.invalidateQueries({ queryKey: ["admin-titles"] });
@@ -96,9 +96,9 @@ function AdminTitle() {
   async function addSource(e: React.FormEvent) {
     e.preventDefault();
     if (src.integration_mode === "manifest" && !/^https?:\/\//.test(src.manifest_url))
-      return toast.error("L'adresse du flux doit commencer par http(s)://");
+      return void toast.error("L'adresse du flux doit commencer par http(s)://");
     if (src.integration_mode === "embed" && !src.embed_code.includes("<iframe"))
-      return toast.error("Collez le code <iframe> fourni par l'hébergeur.");
+      return void toast.error("Collez le code <iframe> fourni par l'hébergeur.");
     const { error } = await supabase.from("media_sources").insert({
       title_id: src.target === "title" ? id : null,
       episode_id: src.target === "title" ? null : src.target,
@@ -110,7 +110,7 @@ function AdminTitle() {
       embed_code: src.integration_mode === "embed" ? src.embed_code : null,
       language: src.language || null,
     });
-    if (error) return toast.error("Source non enregistrée.");
+    if (error) return void toast.error("Source non enregistrée.");
     toast.success("Source ajoutée");
     setSrc((s) => ({ ...s, manifest_url: "", embed_code: "" }));
     refresh();
@@ -129,20 +129,20 @@ function AdminTitle() {
     const { error } = await supabase
       .from("seasons")
       .insert({ title_id: id, season_number: Number(season.number), name: season.name || null });
-    if (error) return toast.error("Saison non créée.");
+    if (error) return void toast.error("Saison non créée.");
     toast.success("Saison ajoutée");
     refresh();
   }
   async function addEpisode(e: React.FormEvent) {
     e.preventDefault();
-    if (!episode.season_id) return toast.error("Choisissez une saison.");
+    if (!episode.season_id) return void toast.error("Choisissez une saison.");
     const { error } = await supabase.from("episodes").insert({
       season_id: episode.season_id,
       episode_number: Number(episode.number),
       name: episode.name || null,
       runtime_minutes: episode.runtime ? Number(episode.runtime) : null,
     });
-    if (error) return toast.error("Épisode non créé.");
+    if (error) return void toast.error("Épisode non créé.");
     toast.success("Épisode ajouté");
     setEpisode((ep) => ({ ...ep, number: String(Number(ep.number) + 1), name: "" }));
     refresh();

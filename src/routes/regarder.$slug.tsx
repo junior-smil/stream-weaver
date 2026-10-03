@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 const playbackQuery = (slug: string, episodeId?: string) =>
   queryOptions({
     queryKey: ["playback", slug, episodeId ?? null],
-    queryFn: () => getPlaybackSources({ data: { slug, episodeId } }),
+    queryFn: () => getPlaybackSources({ data: episodeId ? { slug, episodeId } : { slug } }),
   });
 
 export const Route = createFileRoute("/regarder/$slug")({

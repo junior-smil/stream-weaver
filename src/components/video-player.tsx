@@ -123,7 +123,8 @@ export function VideoPlayer({
         qualityApi.current = {
           setLevel: (index: number) => {
             for (let i = 0; i < qualityLevels.length; i += 1) {
-              qualityLevels[i].enabled = index === -1 || i === index;
+              const lvl = qualityLevels[i];
+              if (lvl) lvl.enabled = index === -1 || i === index;
             }
             setCurrentLevel(index);
           },
